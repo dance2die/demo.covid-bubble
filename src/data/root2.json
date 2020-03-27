@@ -1,0 +1,33 @@
+{
+  "name": "covid19",
+  "color": "hsl(71, 70%, 50%)",
+  "children": [
+    {
+      "name": "US",
+      "color": "hsl(34, 70%, 50%)",
+      "children": [
+        {
+          "name": "American Samoa",
+          "color": "hsl(265, 70%, 50%)",
+          "children": [
+            {
+              "name": "confirmed",
+              "color": "hsl(197, 70%, 50%)",
+              "count": 1
+            },
+            {
+              "name": "death",
+              "color": "hsl(267, 70%, 50%)",
+              "count": 2
+            },
+            {
+              "name": "recovered",
+              "color": "hsl(308, 70%, 50%)",
+              "count": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
