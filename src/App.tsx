@@ -70,7 +70,6 @@ const byCountry: ByCountry = data =>
       if (province) children.push(getProvinceData(i, province, stats))
       else children = getStatsChildren(stats)
 
-      
       acc[country] = { children }
     }
 
@@ -94,8 +93,8 @@ const normalize = (data: any) => {
 
 const MyResponsiveBubble = ({ root }: any) => (
   <Bubble
-  // width={800}
-  // height={800}
+    // width={800}
+    // height={800}
     root={root}
     margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
     identity='name'
@@ -123,16 +122,37 @@ const MyResponsiveBubble = ({ root }: any) => (
     tooltip={({
       id,
       value,
-      color
+      color,
+      depth,
+      path,
+      parent,
+      ...rest
     }: {
       id: number
       value: string
       color: string
-    }) => (
-      <strong style={{ color }}>
-        {id}: {value}
-      </strong>
-    )}
+      depth: number
+      path: string
+      parent: any
+      rest: any
+    }) => {
+      // console.info(`rest`, rest, id, value, color)
+      // console.info(`parent, depth, path`, parent, depth, path, id, value, color)
+
+      return (
+        <strong style={{ color }}>
+          {/* {id}: {value} */}
+          {depth > 0
+            ? path
+                .split('.')
+                .reverse()
+                .slice(1)
+                .join('/')
+            : id}
+          : {value}
+        </strong>
+      )
+    }}
   />
 )
 
