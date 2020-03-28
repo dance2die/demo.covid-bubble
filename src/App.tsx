@@ -10,83 +10,67 @@ import bycountry from './data/bycountry.json'
 // website examples showcase many properties,
 // you'll often use just a few of them.
 
-type Stat = {
+type Stats = {
   confirmed: number
-  death: number
+  deaths: number
   recovered: number
 }
 
-const getProvinceData = (i: number, province: string, stats: Stat) => ({
-  name: province,
-  color: `hsl(71, ${i - 5}%, 60%)`,
-  children: [
-    {
+type ByCountry = (data: any) => any
+
+const getStatsChildren = (stats: Stats) => {
+  const result = []
+
+  if (stats.confirmed && stats.confirmed > 0)
+    result.push({
       name: 'confirmed',
       color: 'hsl(197, 70%, 50%)',
-      count: stats.confirmed || 0
-    },
-    {
-      name: 'death',
+      count: stats.confirmed
+    })
+
+  if (stats.deaths && stats.deaths > 0)
+    result.push({
+      name: 'deaths',
       color: 'hsl(267, 70%, 50%)',
-      count: stats.death || 0
-    },
-    {
+      count: stats.deaths
+    })
+
+  if (stats.recovered && stats.recovered > 0)
+    result.push({
       name: 'recovered',
       color: 'hsl(308, 70%, 50%)',
-      count: stats.recovered || 0
-    }
-  ]
-})
+      count: stats.recovered
+    })
 
-type ByCountry = (data: any) => any
+  return result
+}
+
+const getProvinceData = (i: number, province: string, stats: Stats) => ({
+  name: province,
+  color: `hsl(71, ${i - 5}%, 60%)`,
+  children: getStatsChildren(stats)
+})
 
 const byCountry: ByCountry = data =>
   data.reduce((acc: any, { country, province, stats }: any, i: any) => {
+    // if (country !== "US") return acc;
+
     if (acc[country]) {
       if (province) {
+        // console.info(`province => ${province}`, acc[country], getProvinceData(i, province, stats)) // , getProvinceData(i, province, stats))
         acc[country].children.push(getProvinceData(i, province, stats))
+        // acc[country].children = getProvinceData(i, province, stats)
       } else {
-        acc[country].children.push(
-          {
-            name: 'confirmed',
-            color: 'hsl(197, 70%, 50%)',
-            count: stats.confirmed || 0
-          },
-          {
-            name: 'death',
-            color: 'hsl(267, 70%, 50%)',
-            count: stats.death || 0
-          },
-          {
-            name: 'recovered',
-            color: 'hsl(308, 70%, 50%)',
-            count: stats.recovered || 0
-          }
-        )
+        acc[country].children = getStatsChildren(stats)
       }
     } else {
-      const children = []
+      let children = []
       if (province) children.push(getProvinceData(i, province, stats))
-      else
-        children.push(
-          {
-            name: 'confirmed',
-            color: 'hsl(197, 70%, 50%)',
-            count: stats.confirmed || 0
-          },
-          {
-            name: 'death',
-            color: 'hsl(267, 70%, 50%)',
-            count: stats.death || 0
-          },
-          {
-            name: 'recovered',
-            color: 'hsl(308, 70%, 50%)',
-            count: stats.recovered || 0
-          }
-        )
+      else children = getStatsChildren(stats)
 
+      
       acc[country] = { children }
+      console.info(`first!`, acc[country])
     }
 
     // console.info(`acc${i} =>`, JSON.stringify(acc, null, 2))
@@ -94,17 +78,20 @@ const byCountry: ByCountry = data =>
     return acc
   }, {})
 
-// console.info(`byCountry ==>`, JSON.stringify(byCountry, null, 2))
+const normalize = (data: any) => {
+  // console.info(`byCountry ==>`, JSON.stringify(byCountry(data), null, 2))
+  // console.info(`byCountry ==>`, byCountry(data))
 
-const normalize = (data: any) => ({
-  name: 'covid19',
-  color: 'hsl(71, 70%, 50%)',
-  children: Object.keys(byCountry).map((name, i) => ({
-    name,
-    color: `hsl(34, ${i + 1}%, ${i + 10}%)`,
-    children: byCountry(data)[name]
-  }))
-})
+  return {
+    name: 'covid19',
+    color: 'hsl(71, 70%, 50%)',
+    children: Object.keys(byCountry(data)).map((name, i) => ({
+      name,
+      color: `hsl(34, ${i + 1}%, ${i + 10}%)`,
+      children: byCountry(data)[name].children
+    }))
+  }
+}
 
 const MyResponsiveBubble = ({ root }: any) => (
   <ResponsiveBubble
@@ -149,9 +136,15 @@ const MyResponsiveBubble = ({ root }: any) => (
 )
 
 function App() {
+  const data = normalize(bycountry)
+
+  // console.log(`data =>>`, data)
+
+  // return <h1>hi</h1>
+
   return (
     <div className='flex flex-col h-full items-center justify-center bg-gray-900 text-white'>
-      <MyResponsiveBubble root={normalize(bycountry)} />
+      <MyResponsiveBubble root={data} />
     </div>
   )
 }
