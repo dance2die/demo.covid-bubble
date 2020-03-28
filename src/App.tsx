@@ -1,5 +1,8 @@
 import React from 'react'
-import { ResponsiveBubble } from '@nivo/circle-packing'
+import { ResponsiveBubble as Bubble } from '@nivo/circle-packing'
+// import { Bubble } from '@nivo/circle-packing'
+// import { ResponsiveBubbleHtml  as Bubble } from '@nivo/circle-packing'
+// import { ResponsiveBubbleCanvas   as Bubble } from '@nivo/circle-packing'
 
 // import rootData from './data/root2.json'
 import bycountry from './data/bycountry.json'
@@ -57,7 +60,6 @@ const byCountry: ByCountry = data =>
 
     if (acc[country]) {
       if (province) {
-        // console.info(`province => ${province}`, acc[country], getProvinceData(i, province, stats)) // , getProvinceData(i, province, stats))
         acc[country].children.push(getProvinceData(i, province, stats))
         // acc[country].children = getProvinceData(i, province, stats)
       } else {
@@ -70,10 +72,7 @@ const byCountry: ByCountry = data =>
 
       
       acc[country] = { children }
-      console.info(`first!`, acc[country])
     }
-
-    // console.info(`acc${i} =>`, JSON.stringify(acc, null, 2))
 
     return acc
   }, {})
@@ -94,7 +93,9 @@ const normalize = (data: any) => {
 }
 
 const MyResponsiveBubble = ({ root }: any) => (
-  <ResponsiveBubble
+  <Bubble
+  // width={800}
+  // height={800}
     root={root}
     margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
     identity='name'
