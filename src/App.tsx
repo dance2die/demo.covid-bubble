@@ -27,21 +27,21 @@ const getStatsChildren = (stats: Stats) => {
   if (stats.confirmed && stats.confirmed > 0)
     result.push({
       name: 'confirmed',
-      color: 'hsl(197, 70%, 50%)',
+      color: 'hsl(77, 88%, 49%)',
       count: stats.confirmed
     })
 
   if (stats.deaths && stats.deaths > 0)
     result.push({
       name: 'deaths',
-      color: 'hsl(267, 70%, 50%)',
+      color: 'hsl(17, 88%, 49%)',
       count: stats.deaths
     })
 
   if (stats.recovered && stats.recovered > 0)
     result.push({
       name: 'recovered',
-      color: 'hsl(308, 70%, 50%)',
+      color: 'hsl(107, 88%, 49%)',
       count: stats.recovered
     })
 
@@ -50,7 +50,8 @@ const getStatsChildren = (stats: Stats) => {
 
 const getProvinceData = (i: number, province: string, stats: Stats) => ({
   name: province,
-  color: `hsl(71, ${i - 5}%, 60%)`,
+  // color: `hsl(71, ${i - 5}%, 60%)`,
+  color: `hsl(53, 88%, 49%)`,
   children: getStatsChildren(stats)
 })
 
@@ -82,10 +83,11 @@ const normalize = (data: any) => {
 
   return {
     name: 'covid19',
-    color: 'hsl(71, 70%, 50%)',
+    color: 'hsl(197, 88%, 49%)',
     children: Object.keys(byCountry(data)).map((name, i) => ({
       name,
-      color: `hsl(34, ${i + 1}%, ${i + 10}%)`,
+      color: 'hsl(197, 88%, 49%)',
+      // color: `hsl(34, ${i + 1}%, ${i + 10}%)`,
       children: byCountry(data)[name].children
     }))
   }
@@ -99,9 +101,13 @@ const MyResponsiveBubble = ({ root }: any) => (
     margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
     identity='name'
     value='count'
-    colors={{ scheme: 'nivo' }}
+    // colors={{ scheme: 'nivo' }}
+    colors={{ scheme: 'purple_blue_green' }}
+    // colorBy='name'
+    colorBy='depth'
     padding={6}
-    labelTextColor={{ from: 'color', modifiers: [['darker', 0.8]] }}
+    // labelTextColor={{ from: 'color', modifiers: [['darker', 0.8]] }}
+    labelTextColor="black"
     borderWidth={2}
     borderColor={{ from: 'color' }}
     defs={[
@@ -117,7 +123,7 @@ const MyResponsiveBubble = ({ root }: any) => (
     ]}
     fill={[{ match: { depth: 1 }, id: 'lines' }]}
     animate={true}
-    motionStiffness={90}
+    motionStiffness={66}
     motionDamping={12}
     tooltip={({
       id,
